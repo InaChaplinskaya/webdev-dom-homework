@@ -78,7 +78,7 @@
               })
     }
 
-    function writeCommentToServer(name, text) {
+    function writeCommentToServer() {
       let status = 0
 
       fetch("https://wedev-api.sky.pro/api/v1/gleb-fokin/comments", {
@@ -194,16 +194,16 @@
         name = nameElement.value
         text = textElement.value
 
-        if (name.trim() === '' || text.trim() === '') {
-          alert('Заполните поле')
-          return
-        }
+        // if (name.trim() === '' || text.trim() === '') {
+        //   alert('Заполните поле')
+        //   return
+        // }
 
         state.sending = true
 
         renderApp()
 
-        writeCommentToServer(name, text)
+        writeCommentToServer()
       })
     }
 
