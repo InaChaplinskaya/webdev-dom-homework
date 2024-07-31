@@ -46,9 +46,18 @@
     }
 
     function readCommentsFromServer() {
+      let status = 0
+
       fetch("https://wedev-api.sky.pro/api/v1/gleb-fokin/comments")
-              .then((response) => response.json())
+              .then((response) => {
+                status = response.status
+
+                return response.json()
+              })
               .then((data) => {
+                 if (status >= 400)
+                  throw new Error(data.error)
+
                 comments = data.comments.map((comment) => {
                   return {
                     name: comment.author.name,
@@ -58,11 +67,18 @@
                     yourLike: comment.isLiked,
                   }
                 })
+
                 renderApp()
+              })
+              .catch((error) => {
+                if (error.message === "Failed to fetch")
+                  alert("У вас проблема с Интернетом")
+                else
+                  alert(error.message)
               })
     }
 
-    function writeCommentToServer(name, text) {
+    function writeCommentToServer() {
       let status = 0
 
       fetch("https://wedev-api.sky.pro/api/v1/gleb-fokin/comments", {
@@ -178,16 +194,16 @@
         name = nameElement.value
         text = textElement.value
 
-        if (name.trim() === '' || text.trim() === '') {
-          alert('Заполните поле')
-          return
-        }
+        // if (name.trim() === '' || text.trim() === '') {
+        //   alert('Заполните поле')
+        //   return
+        // }
 
         state.sending = true
 
         renderApp()
 
-        writeCommentToServer(name, text)
+        writeCommentToServer()
       })
     }
 
